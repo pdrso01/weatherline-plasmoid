@@ -36,7 +36,8 @@ PlasmoidItem {
   }
 
   compactRepresentation: CompactRepresentation {
-
+    widgetTextColor: root.widgetTextColor
+    temperatureTextColor: root.temperatureTextColor
   }
   fullRepresentation: FullRepresentation {
   }

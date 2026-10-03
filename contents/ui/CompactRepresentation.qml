@@ -19,6 +19,8 @@ Item {
     property bool textweather: Plasmoid.configuration.textweather
     property bool activeweathershottext: heightH > 34
     property int fonssizes: Plasmoid.configuration.sizeFontConfig
+    property color widgetTextColor
+    property color temperatureTextColor
     property int heightH: root.height
     property var widthWidget: activeweathershottext ? temOfCo.implicitWidth : temOfCo.implicitWidth + wrapper_weathertext.width
     property var widthReal: isVertical ? root.width : initial.implicitWidth
@@ -69,7 +71,7 @@ Item {
                     text: weatherData.temperaturaActual
                     font.weight: boldfonts ? Font.Bold : Font.DemiBold
                     font.pixelSize: fonssizes
-                    color: root.temperatureTextColor
+                    color: temperatureTextColor
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -81,7 +83,7 @@ Item {
                     horizontalAlignment: Text.AlignLeft
                     font.weight: boldfonts ? Font.DemiBold : Font.Medium
                     font.pixelSize: fonssizes
-                    color: root.temperatureTextColor
+                    color: temperatureTextColor
                     verticalAlignment: Text.AlignVCenter
                 }
             }
@@ -95,7 +97,7 @@ Item {
                     text: weatherData.weatherShottext
                     font.pixelSize: fonssizes
                     font.weight: Font.DemiBold
-                    color: root.widgetTextColor
+                    color: widgetTextColor
                     verticalAlignment: Text.AlignVCenter
                 }
             }
@@ -128,7 +130,7 @@ Item {
                 text: weatherData.temperaturaActual
                 font.weight: boldfonts ? Font.Bold : Font.DemiBold
                 font.pixelSize: fonssizes
-                color: root.temperatureTextColor
+                color: temperatureTextColor
                 horizontalAlignment: Text.AlignHCenter
             }
             Label {
@@ -137,7 +139,7 @@ Item {
                 text: (root.temperatureUnit === "0") ? " °C" : " °F"
                 font.weight: boldfonts ? Font.DemiBold : Font.Medium
                 font.pixelSize: fonssizes
-                color: root.temperatureTextColor
+                color: temperatureTextColor
                 horizontalAlignment: Text.AlignHCenter
             }
         }
