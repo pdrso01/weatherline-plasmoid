@@ -5,6 +5,7 @@ import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasma5support as Plasma5Support
+import "js/traductor.js" as Traduc
 
 PlasmoidItem {
   id: root
@@ -18,9 +19,14 @@ PlasmoidItem {
   property bool boldfonts: plasmoid.configuration.boldfonts
   property string temperatureUnit: plasmoid.configuration.temperatureUnit
   property string sizeFontConfg: plasmoid.configuration.sizeFontConfig
+  property string weatherLanguageSetting: plasmoid.configuration.weatherLanguage || "system"
+  property string weatherLanguageCode: Traduc.weatherLanguage(weatherLanguageSetting, Qt.uiLanguage, Qt.locale().name)
+  property color widgetTextColor: plasmoid.configuration.textColor === "" ? PlasmaCore.Theme.textColor : plasmoid.configuration.textColor
+  property color temperatureTextColor: plasmoid.configuration.temperatureColor === "" ? PlasmaCore.Theme.textColor : plasmoid.configuration.temperatureColor
 
   DayOfWeekRow {
     id: daysWeek
+    locale: Qt.locale(root.weatherLanguageCode)
     visible:  false
     delegate: Item {
       Component.onCompleted: {

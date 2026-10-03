@@ -31,6 +31,7 @@ Item {
   property string latitudeC: plasmoid.configuration.latitudeC
   property string longitudeC: plasmoid.configuration.longitudeC
   property string temperatureUnit: plasmoid.configuration.temperatureUnit
+  property string weatherLanguageSetting: plasmoid.configuration.weatherLanguage || "system"
 
   property string latitude: (useCoordinatesIp === "true") ? latitudeIP : (latitudeC === "0") ? latitudeIP : latitudeC
   property string longitud: (useCoordinatesIp === "true") ? longitudIP : (longitudeC === "0") ? longitudIP : longitudeC
@@ -69,7 +70,7 @@ Item {
   property string therday: Qt.formatDateTime(new Date(new Date().getTime() + (numberOfDays * 24 * 60 * 60 * 1000)), "yyyy-MM-dd")
   property int numberOfDays: 6
   property string temperaturaActual: fahrenheit(obtener(datosweather, 1))
-  property string codeleng: ((Qt.locale().name)[0] + (Qt.locale().name)[1])
+  property string codeleng: Traduc.weatherLanguage(weatherLanguageSetting, Qt.uiLanguage, Qt.locale().name)
   property string codeweather: obtener(datosweather, 4)
   property string codeweatherTomorrow: obtener(forecastWeather, 2)
   property string codeweatherDayAftertomorrow: obtener(forecastWeather, 3)
@@ -133,7 +134,7 @@ Item {
   }
 
   function getCoordinatesWithIp() {
-    console.log("tercer paso")
+    console.log("Requesting IP-based coordinates")
     GeoCoordinates.obtenerCoordenadas(function(result) {
 
       completeCoordinates = result;
@@ -143,12 +144,12 @@ Item {
   }
 
   onObserverCoordenatesChanged: {
-    console.log("Coordenadas cambiaron, actualizando clima");
+    console.log("Coordinates changed; updating weather");
     if (latitude && longitud && latitude !== "0" && longitud !== "0") {
       updateWeather(2);
       getCityFuncion();
     } else {
-      console.warn("Coordenadas inválidas, reintentando...");
+      console.warn("Coordinates unavailable; retrying location lookup...");
       retryCoordinate.start();
     }
   }
@@ -156,7 +157,7 @@ Item {
   function getCityFuncion() {
 
     if (!latitude || !longitud || latitude === "0" || longitud === "0") {
-      console.error("Coordenadas inválidas para la solicitud de ciudad");
+      console.error("Cannot request a city name without valid coordinates");
       return;
     }
     GetCity.getNameCity(latitude, longitud, codeleng, function(result) {
@@ -243,7 +244,7 @@ Item {
     running: false
     repeat: false
     onTriggered: {
-      console.log("tercer paso retry", completeCoordinates)
+      console.log("Retrying coordinate lookup:", completeCoordinates)
       if (completeCoordinates === "") {
         getCoordinatesWithIp();
       }

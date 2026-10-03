@@ -1,6 +1,6 @@
 function getNameCity(latitude, longitud, leng, callback) {
     let url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitud}&accept-language=${leng}`;
-    console.log("Generated URL: ", url); // Para verificar la URL generada
+    console.log("Reverse geocoding URL:", url); // Debug the reverse geocoding URL.
 
     let req = new XMLHttpRequest();
     req.open("GET", url, true);
@@ -15,23 +15,23 @@ function getNameCity(latitude, longitud, leng, callback) {
                     let county = address.county;
                     let state = address.state;
                     let full = city ? city : state ? state : county;
-                    console.log(full);
+                    console.log("Resolved city:", full);
                     callback(full);
                 } catch (e) {
-                    console.error("Error al analizar la respuesta JSON: ", e);
+                    console.error("Failed to parse the reverse geocoding response:", e);
                 }
             } else {
-                console.error(`city failed`);
+                console.error(`Reverse geocoding request failed with status ${req.status}`);
             }
         }
     };
 
     req.onerror = function () {
-        console.error("La solicitud falló");
+        console.error("Reverse geocoding request failed");
     };
 
     req.ontimeout = function () {
-        console.error("La solicitud excedió el tiempo de espera");
+        console.error("Reverse geocoding request timed out");
     };
 
     req.send();

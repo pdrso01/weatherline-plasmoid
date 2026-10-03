@@ -1,3 +1,12 @@
+function weatherLanguage(configuredLanguage, uiLanguage, localeName) {
+    const availableLanguages = ["en", "pt", "es", "fr", "de", "it", "ja", "ko", "ru", "zh"];
+    const requestedLanguage = configuredLanguage && configuredLanguage !== "system"
+        ? configuredLanguage
+        : uiLanguage || localeName;
+    const languageCode = String(requestedLanguage || "en").split(/[-_]/)[0].toLowerCase();
+    return availableLanguages.indexOf(languageCode) !== -1 ? languageCode : "en";
+}
+
 function weatherShortText(languageCode, code) {
     let descriptions = {
         en: {

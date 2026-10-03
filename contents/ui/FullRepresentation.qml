@@ -45,6 +45,8 @@ ColumnLayout {
                 text: temperatureUnit === 0 ? weatherData.temperaturaActual + "°C" : weatherData.temperaturaActual + "°F"
                 width: parent.width
                 font.pixelSize: currentWeather.height * 0.4
+                font.weight: Font.Black
+                color: root.temperatureTextColor
                 horizontalAlignment: Text.AlignHCenter
             }
             PlasmaComponents3.Label {
@@ -52,12 +54,16 @@ ColumnLayout {
                 text: weatherData.weatherLongtext
                 width: parent.width
                 font.pixelSize: currentWeather.height * .18
+                font.weight: Font.DemiBold
+                color: root.widgetTextColor
                 horizontalAlignment: Text.AlignHCenter
             }
             PlasmaComponents3.Label {
                 text: weatherData.textProbability + ": " + weatherData.probabilidadDeLLuvia + "%"
                 width: parent.width
                 font.pixelSize: currentWeather.height * .09
+                font.weight: Font.Medium
+                color: root.widgetTextColor
                 horizontalAlignment: Text.AlignHCenter
             }
         }
@@ -81,6 +87,8 @@ ColumnLayout {
                 PlasmaComponents3.Label {
                     width: parent.width
                     text: days[sumarDia((modelData + 1))]
+                    font.weight: Font.DemiBold
+                    color: root.widgetTextColor
                     horizontalAlignment: Text.AlignHCenter
                 }
 
@@ -95,11 +103,15 @@ ColumnLayout {
                     PlasmaComponents3.Label {
                         id: max
                         text: modelData === 0 ? Math.round(weatherData.maxweatherTomorrow) + "°  " :  modelData === 1  ? Math.round(weatherData.maxweatherDayAftertomorrow) + "° " : modelData === 2 ? Math.round(weatherData.maxweatherTwoDaysAfterTomorrow) + "°  " : ""
+                        font.weight: Font.DemiBold
+                        color: root.temperatureTextColor
                         horizontalAlignment: Text.AlignHCenter
                     }
                     PlasmaComponents3.Label {
                         id: min
                         text:  modelData === 0 ? Math.round(weatherData.minweatherTomorrow) + "°" :  modelData === 1  ? Math.round(weatherData.minweatherDayAftertomorrow) + "°" : modelData === 2 ? Math.round(weatherData.minweatherTwoDaysAfterTomorrow) + "°" : ""
+                        font.weight: Font.Normal
+                        color: root.temperatureTextColor
                         opacity: .5
                         horizontalAlignment: Text.AlignHCenter
                     }

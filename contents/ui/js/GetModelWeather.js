@@ -15,10 +15,10 @@ function GetForecastWeather(latitud, longitud, fechaInicio, fechaFin, callback) 
                  let min = daily.temperature_2m_min.join(' ');
 
                  let full = codes + " " + max + " " + min
-                 console.log(`${full}`);
+                 console.log("Weather forecast response:", full);
                  callback(full);
              } else {
-                 console.error(`Error en la solicitud: ${req.status}`);
+                 console.error(`Weather forecast request failed with status ${req.status}`);
              }
          }
      };

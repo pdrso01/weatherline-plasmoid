@@ -26,7 +26,16 @@
 	</entry>
     <entry name="textweather" type="bool">
       <default>true</default>
-      </entry>
+    </entry>
+    <entry name="textColor" type="string">
+      <default></default>
+    </entry>
+    <entry name="temperatureColor" type="string">
+      <default></default>
+    </entry>
+    <entry name="weatherLanguage" type="string">
+      <default>system</default>
+    </entry>
   </group>
 
 </kcfg>

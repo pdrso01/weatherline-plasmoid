@@ -3,8 +3,9 @@ import QtQuick.Controls
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.core 2.0 as PlasmaCore
 
-Item {
+Kirigami.ScrollablePage {
     id: configRoot
+    title: i18n("General")
 
     QtObject {
         id: unidWeatherValue
@@ -16,7 +17,32 @@ Item {
         property var value
     }
 
+    QtObject {
+        id: textColors
+        property string textColor: ""
+        property string temperatureColor: ""
+    }
+
+    QtObject {
+        id: weatherLanguageValue
+        property string value: "system"
+    }
+
     signal configurationChanged
+
+    property int cfg_temperatureUnitDefault: 0
+    property int cfg_sizeFontConfigDefault: 11
+    property string cfg_latitudeCDefault: "0"
+    property string cfg_longitudeCDefault: "0"
+    property bool cfg_useCoordinatesIpDefault: true
+    property bool cfg_boldfontsDefault: false
+    property bool cfg_textweatherDefault: true
+    property alias cfg_textColor: textColors.textColor
+    property string cfg_textColorDefault: ""
+    property alias cfg_temperatureColor: textColors.temperatureColor
+    property string cfg_temperatureColorDefault: ""
+    property alias cfg_weatherLanguage: weatherLanguageValue.value
+    property string cfg_weatherLanguageDefault: "system"
 
     property alias cfg_temperatureUnit: unidWeatherValue.value
     property alias cfg_sizeFontConfig: fontsizeValue.value
@@ -28,6 +54,28 @@ Item {
 
     Kirigami.FormLayout {
         width: parent.width
+
+        ComboBox {
+            id: weatherLanguageBox
+            textRole: "text"
+            valueRole: "value"
+            Kirigami.FormData.label: i18n("Widget language:")
+            model: [
+                {text: i18n("System language"), value: "system"},
+                {text: "English", value: "en"},
+                {text: "Português", value: "pt"},
+                {text: "Español", value: "es"},
+                {text: "Français", value: "fr"},
+                {text: "Deutsch", value: "de"},
+                {text: "Italiano", value: "it"},
+                {text: "日本語", value: "ja"},
+                {text: "한국어", value: "ko"},
+                {text: "Русский", value: "ru"},
+                {text: "中文", value: "zh"},
+            ]
+            onActivated: weatherLanguageValue.value = currentValue
+            Component.onCompleted: currentIndex = indexOfValue(weatherLanguageValue.value)
+        }
 
         ComboBox {
             textRole: "text"

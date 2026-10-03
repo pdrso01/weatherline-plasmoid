@@ -25,10 +25,10 @@ function obtenerDatosClimaticos(latitud, longitud, fechaInicio, hours, callback)
                  let tempMax = datosDiarios.temperature_2m_max[0];
 
                  let full = temperaturaActual + " " + tempMin + " " + tempMax + " " + codeCurrentWeather + " " + propabilityPrecipitationCurrent + " " + windSpeed + " " + propabilityUVindex + " " + isday
-                 console.log(`${full}`);
+                 console.log("Current weather response:", full);
                  callback(full);
              } else {
-                 console.error(`Error en la solicitud: weathergeneral ${req.status}`);
+                 console.error(`Current weather request failed with status ${req.status}`);
                  //callback(`failed ${req.status}`)
              }
          }

@@ -4,9 +4,13 @@
             {
                 "Email": "adolfo@librepixels.com",
                 "Name": "zayronxio"
+            },
+            {
+                "Email": "pdrso01@proton.me",
+                "Name": "pdrso01"
             }
         ],
-        "Name": "Minimal chaac weather",
+        "Name": "Weatherline",
         "Id": "Minimal.chaac.weather",
         "Description": "widget showing the current weather status.",
         "Category": "Utilities",
@@ -17,7 +21,7 @@
             "Plasma/Applet"
         ],
         "Version": "2.7",
-        "Website": "https://github.com/zayronxio/Chaac.Minimal.Weather/"
+        "Website": "https://github.com/pdrso01/weatherline-plasmoid"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-MainScript": "ui/main.qml"
