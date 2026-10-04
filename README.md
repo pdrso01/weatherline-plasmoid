@@ -54,8 +54,9 @@ kpackagetool6 --type Plasma/Applet --remove com.github.pdrso01.weatherline
 ## Changes in This Version
 
 - **Language:** by default, the widget follows the system interface language. You can choose a different language in the General settings. Available languages are English, Portuguese, Spanish, French, German, Italian, Japanese, Korean, Russian, and Chinese. If the system language is not available, the widget falls back to English.
+- **Location:** search for a city or place in General settings and select a result to use its coordinates instead of IP-based location. Search results come from OpenStreetMap Nominatim.
 - **Colors:** the Appearance tab lets you choose separate colors for text and temperatures, or restore the Plasma theme colors.
-- **Typography:** the current temperature is more prominent in the expanded forecast; in the compact panel, the existing Bold font option still controls the temperature weight.
+- **Typography:** font size and bold text are configurable in the Appearance tab. The current temperature is more prominent in the expanded forecast.
 - **Diagnostics:** log messages have been standardized in English.
 - **Metadata:** the widget is now named Weatherline, its package ID has changed from the original, and this repository's URL has been updated.
 

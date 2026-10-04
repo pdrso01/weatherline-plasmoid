@@ -32,6 +32,12 @@ Item {
   property string longitudeC: plasmoid.configuration.longitudeC
   property string temperatureUnit: plasmoid.configuration.temperatureUnit
   property string weatherLanguageSetting: plasmoid.configuration.weatherLanguage || "system"
+  property string selectedLocationName: plasmoid.configuration.locationName || ""
+  onSelectedLocationNameChanged: {
+    if (useCoordinatesIp !== "true") {
+      city = selectedLocationName
+    }
+  }
 
   property string latitude: (useCoordinatesIp === "true") ? latitudeIP : (latitudeC === "0") ? latitudeIP : latitudeC
   property string longitud: (useCoordinatesIp === "true") ? longitudIP : (longitudeC === "0") ? longitudIP : longitudeC
@@ -104,6 +110,9 @@ Item {
   readonly property string prefixIcon: determinateDay.isday ? "" : "-night"
 
   Component.onCompleted: {
+    if (useCoordinatesIp !== "true" && selectedLocationName) {
+      city = selectedLocationName
+    }
     updateWeather(1);
   }
 
@@ -155,6 +164,10 @@ Item {
   }
 
   function getCityFuncion() {
+    if (useCoordinatesIp !== "true" && selectedLocationName) {
+      city = selectedLocationName;
+      return;
+    }
 
     if (!latitude || !longitud || latitude === "0" || longitud === "0") {
       console.error("Cannot request a city name without valid coordinates");

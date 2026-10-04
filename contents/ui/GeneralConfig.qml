@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -18,6 +19,11 @@ Kirigami.ScrollablePage {
     }
 
     QtObject {
+        id: boldFontValue
+        property var value: false
+    }
+
+    QtObject {
         id: textColors
         property string textColor: ""
         property string temperatureColor: ""
@@ -26,6 +32,11 @@ Kirigami.ScrollablePage {
     QtObject {
         id: weatherLanguageValue
         property string value: "system"
+    }
+
+    QtObject {
+        id: locationNameValue
+        property string value: ""
     }
 
     signal configurationChanged
@@ -43,14 +54,106 @@ Kirigami.ScrollablePage {
     property string cfg_temperatureColorDefault: ""
     property alias cfg_weatherLanguage: weatherLanguageValue.value
     property string cfg_weatherLanguageDefault: "system"
+    property alias cfg_locationName: locationNameValue.value
+    property string cfg_locationNameDefault: ""
+    property var locationResults: []
+    property var locationSearchRequest: null
+    property int locationSearchGeneration: 0
 
     property alias cfg_temperatureUnit: unidWeatherValue.value
     property alias cfg_sizeFontConfig: fontsizeValue.value
     property alias cfg_latitudeC: latitude.text
     property alias cfg_longitudeC: longitude.text
     property alias cfg_useCoordinatesIp: autamateCoorde.checked
-    property alias cfg_boldfonts: boldfont.checked
+    property alias cfg_boldfonts: boldFontValue.value
     property alias cfg_textweather: textweather.checked
+
+    function searchLocations() {
+        var query = locationSearch.text.trim()
+        if (query.length < 3) {
+            locationResults = []
+            locationSearchStatus.text = query.length === 0 ? "" : i18n("Enter at least 3 characters")
+            return
+        }
+
+        locationSearchGeneration += 1
+        var generation = locationSearchGeneration
+        if (locationSearchRequest) {
+            locationSearchRequest.abort()
+        }
+
+        var language = Qt.uiLanguage || Qt.locale().name
+        var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&accept-language="
+                + encodeURIComponent(language) + "&q=" + encodeURIComponent(query)
+        var request = new XMLHttpRequest()
+        locationSearchRequest = request
+        console.log("Location search started")
+        locationSearchStatus.text = i18n("Searching...")
+        request.open("GET", url, true)
+        request.timeout = 10000
+        request.setRequestHeader("User-Agent", "Weatherline/1.0 (https://github.com/pdrso01/weatherline-plasmoid)")
+        request.onreadystatechange = function() {
+            if (request.readyState !== XMLHttpRequest.DONE || generation !== locationSearchGeneration) {
+                return
+            }
+
+            locationSearchRequest = null
+            if (request.status === 200) {
+                try {
+                    locationResults = JSON.parse(request.responseText)
+                    console.log("Location search returned", locationResults.length, "results")
+                    locationSearchStatus.text = locationResults.length === 0 ? i18n("No locations found") : ""
+                } catch (error) {
+                    locationResults = []
+                    locationSearchStatus.text = i18n("Could not read search results")
+                }
+            } else {
+                locationResults = []
+                console.error("Location search failed with status", request.status, request.responseText)
+                locationSearchStatus.text = i18n("Location search failed (HTTP %1)").arg(request.status)
+            }
+        }
+        request.onerror = function() {
+            if (generation === locationSearchGeneration) {
+                locationSearchRequest = null
+                locationResults = []
+                console.error("Location search network error")
+                locationSearchStatus.text = i18n("Location search failed")
+            }
+        }
+        request.ontimeout = function() {
+            if (generation === locationSearchGeneration) {
+                locationSearchRequest = null
+                locationResults = []
+                console.error("Location search timed out")
+                locationSearchStatus.text = i18n("Location search timed out")
+            }
+        }
+        request.send()
+    }
+
+    function selectLocation(location) {
+        locationSearchGeneration += 1
+        if (locationSearchRequest) {
+            locationSearchRequest.abort()
+            locationSearchRequest = null
+        }
+        var address = location.address || {}
+        locationNameValue.value = address.city || address.town || address.village || address.municipality || address.suburb || location.name || location.display_name.split(",")[0]
+        latitude.text = location.lat
+        longitude.text = location.lon
+        autamateCoorde.checked = false
+        locationSearch.text = location.display_name
+        locationResults = []
+        locationSearchStatus.text = i18n("Selected location")
+    }
+
+    Timer {
+        id: locationSearchTimer
+        interval: 1000
+        repeat: false
+        onTriggered: configRoot.searchLocations()
+    }
 
     Kirigami.FormLayout {
         width: parent.width
@@ -99,42 +202,49 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18n('Use IP location')
         }
         TextField {
+            id: locationSearch
+            Kirigami.FormData.label: i18n("Find a city or place:")
+            placeholderText: i18n("Type at least 3 characters")
+            Layout.fillWidth: true
+            onTextEdited: {
+                locationResults = []
+                locationSearchStatus.text = ""
+                locationSearchTimer.restart()
+            }
+        }
+        ListView {
+            id: locationResultsView
+            visible: locationResults.length > 0
+            model: locationResults
+            implicitHeight: Math.min(contentHeight, 240)
+            Layout.fillWidth: true
+            clip: true
+
+            delegate: ItemDelegate {
+                width: locationResultsView.width
+                text: modelData.display_name
+                onClicked: configRoot.selectLocation(modelData)
+            }
+        }
+        Label {
+            id: locationSearchStatus
+            visible: text.length > 0
+            color: text.startsWith(i18n("Location search failed")) ? Kirigami.Theme.negativeTextColor : Kirigami.Theme.textColor
+            Layout.fillWidth: true
+        }
+        TextField {
             id: latitude
             visible: !autamateCoorde.checked
             Kirigami.FormData.label: i18n("Latitude:")
             width: 200
+            onTextEdited: locationNameValue.value = ""
         }
         TextField {
             id: longitude
             visible: !autamateCoorde.checked
             Kirigami.FormData.label: i18n("Longitude:")
             width: 200
-        }
-        CheckBox {
-            id: boldfont
-            Kirigami.FormData.label: i18n('Bold font:')
-        }
-        ComboBox {
-            textRole: "text"
-            valueRole: "value"
-            Kirigami.FormData.label: i18n('Font Size:')
-            id: valueForSizeFont
-            model: [
-                {text: i18n("8"), value: 8},
-                {text: i18n("9"), value: 9},
-                {text: i18n("10"), value: 10},
-                {text: i18n("11"), value: 11},
-                {text: i18n("12"), value: 12},
-                {text: i18n("13"), value: 13},
-                {text: i18n("14"), value: 14},
-                {text: i18n("15"), value: 15},
-                {text: i18n("16"), value: 16},
-                {text: i18n("17"), value: 17},
-                {text: i18n("18"), value: 18},
-
-            ]
-            onActivated: fontsizeValue.value = currentValue
-            Component.onCompleted: currentIndex = indexOfValue(fontsizeValue.value)
+            onTextEdited: locationNameValue.value = ""
         }
     }
 

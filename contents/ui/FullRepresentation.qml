@@ -37,9 +37,20 @@ ColumnLayout {
         Column {
             id: currentSection
             width: longweathertext.implicitWidth < temperatura.implicitWidth ? temperatura.implicitWidth : longweathertext.implicitWidth
-            height: temperatura.implicitHeight + longweathertext.implicitHeight
+            height: cityLabel.implicitHeight + temperatura.implicitHeight + longweathertext.implicitHeight + probabilityLabel.implicitHeight
             anchors.centerIn: currentWeather
             spacing: 0
+            PlasmaComponents3.Label {
+                id: cityLabel
+                text: Plasmoid.configuration.locationName || weatherData.city
+                visible: text.length > 0
+                width: parent.width
+                font.pixelSize: currentWeather.height * 0.08
+                font.weight: Font.Medium
+                color: root.widgetTextColor
+                horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideRight
+            }
             PlasmaComponents3.Label {
                 id: temperatura
                 text: temperatureUnit === 0 ? weatherData.temperaturaActual + "°C" : weatherData.temperaturaActual + "°F"
@@ -59,6 +70,7 @@ ColumnLayout {
                 horizontalAlignment: Text.AlignHCenter
             }
             PlasmaComponents3.Label {
+                id: probabilityLabel
                 text: weatherData.textProbability + ": " + weatherData.probabilidadDeLLuvia + "%"
                 width: parent.width
                 font.pixelSize: currentWeather.height * .09
@@ -69,6 +81,13 @@ ColumnLayout {
         }
         Component.onCompleted: {
             fullweather.height = currentSection.implicitHeight * 2
+        }
+
+        Connections {
+            target: weatherData
+            function onCityChanged() {
+                fullweather.height = currentSection.implicitHeight * 2
+            }
         }
     }
 

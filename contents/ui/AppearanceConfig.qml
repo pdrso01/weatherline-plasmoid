@@ -10,7 +10,6 @@ Kirigami.ScrollablePage {
     title: i18n("Appearance")
     property int cfg_temperatureUnit: 0
     property int cfg_temperatureUnitDefault: 0
-    property int cfg_sizeFontConfig: 11
     property int cfg_sizeFontConfigDefault: 11
     property string cfg_latitudeC: "0"
     property string cfg_latitudeCDefault: "0"
@@ -18,12 +17,18 @@ Kirigami.ScrollablePage {
     property string cfg_longitudeCDefault: "0"
     property bool cfg_useCoordinatesIp: true
     property bool cfg_useCoordinatesIpDefault: true
-    property bool cfg_boldfonts: false
     property bool cfg_boldfontsDefault: false
     property bool cfg_textweather: true
     property bool cfg_textweatherDefault: true
     property string cfg_weatherLanguage: "system"
     property string cfg_weatherLanguageDefault: "system"
+    property string cfg_locationName: ""
+    property string cfg_locationNameDefault: ""
+
+    QtObject {
+        id: fontsizeValue
+        property var value: 11
+    }
 
     QtObject {
         id: textColorValue
@@ -39,6 +44,8 @@ Kirigami.ScrollablePage {
     property string cfg_textColorDefault: ""
     property alias cfg_temperatureColor: temperatureColorValue.value
     property string cfg_temperatureColorDefault: ""
+    property alias cfg_sizeFontConfig: fontsizeValue.value
+    property alias cfg_boldfonts: boldfont.checked
     readonly property color effectiveTextColor: textColorValue.value === "" ? Kirigami.Theme.textColor : textColorValue.value
     readonly property color effectiveTemperatureColor: temperatureColorValue.value === "" ? Kirigami.Theme.textColor : temperatureColorValue.value
 
@@ -91,6 +98,33 @@ Kirigami.ScrollablePage {
                 enabled: temperatureColorValue.value !== ""
                 onClicked: temperatureColorValue.value = ""
             }
+        }
+
+        CheckBox {
+            id: boldfont
+            Kirigami.FormData.label: i18n("Bold font:")
+        }
+
+        ComboBox {
+            id: valueForSizeFont
+            textRole: "text"
+            valueRole: "value"
+            Kirigami.FormData.label: i18n("Font size:")
+            model: [
+                {text: "8", value: 8},
+                {text: "9", value: 9},
+                {text: "10", value: 10},
+                {text: "11", value: 11},
+                {text: "12", value: 12},
+                {text: "13", value: 13},
+                {text: "14", value: 14},
+                {text: "15", value: 15},
+                {text: "16", value: 16},
+                {text: "17", value: 17},
+                {text: "18", value: 18},
+            ]
+            onActivated: fontsizeValue.value = currentValue
+            Component.onCompleted: currentIndex = indexOfValue(fontsizeValue.value)
         }
     }
 

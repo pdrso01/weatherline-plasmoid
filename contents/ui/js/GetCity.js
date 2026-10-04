@@ -4,6 +4,7 @@ function getNameCity(latitude, longitud, leng, callback) {
 
     let req = new XMLHttpRequest();
     req.open("GET", url, true);
+    req.setRequestHeader("User-Agent", "Weatherline/1.0 (https://github.com/pdrso01/weatherline-plasmoid)");
 
     req.onreadystatechange = function () {
         if (req.readyState === 4) {
@@ -11,17 +12,14 @@ function getNameCity(latitude, longitud, leng, callback) {
                 try {
                     let datos = JSON.parse(req.responseText);
                     let address = datos.address;
-                    let city = address.city;
-                    let county = address.county;
-                    let state = address.state;
-                    let full = city ? city : state ? state : county;
+                    let full = address.city || address.town || address.village || address.municipality || address.suburb || address.county || address.state || "";
                     console.log("Resolved city:", full);
                     callback(full);
                 } catch (e) {
                     console.error("Failed to parse the reverse geocoding response:", e);
                 }
             } else {
-                console.error(`Reverse geocoding request failed with status ${req.status}`);
+                console.error(`Reverse geocoding request failed with status ${req.status}:`, req.responseText);
             }
         }
     };

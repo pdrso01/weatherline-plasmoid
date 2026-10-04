@@ -36,6 +36,9 @@
     <entry name="weatherLanguage" type="string">
       <default>system</default>
     </entry>
+    <entry name="locationName" type="string">
+      <default></default>
+    </entry>
   </group>
 
 </kcfg>
