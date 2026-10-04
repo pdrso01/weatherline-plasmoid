@@ -1,6 +1,8 @@
 # Weatherline
 
-Weatherline is a weather widget for KDE Plasma 6, based on **Minimal Chaac Weather**, originally created by [zayronxio](https://github.com/zayronxio).
+Weatherline is a compact weather widget for KDE Plasma 6, based on **Minimal Chaac Weather**, originally created by [zayronxio](https://github.com/zayronxio).
+
+It shows the current temperature and conditions in your panel, and opens a forecast with your city, the next three days and the chance of rain. You can search for any place or use IP-based location, choose Celsius or Fahrenheit, and customize colors and fonts.
 
 This repository is an independent continuation of the original project. The user-facing name has been simplified to Weatherline. The package ID was changed from the original `Minimal.chaac.weather` to `com.github.pdrso01.weatherline` so Plasma can identify and load this version correctly.
 

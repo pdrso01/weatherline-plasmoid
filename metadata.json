@@ -13,7 +13,7 @@
         ],
         "Name": "Weatherline",
         "Id": "com.github.pdrso01.weatherline",
-        "Description": "widget showing the current weather status.",
+        "Description": "A compact weather widget for KDE Plasma 6 with forecast, city search and custom colors.",
         "Category": "Utilities",
         "Icon": "weather",
         "EnabledByDefault": true,
@@ -21,7 +21,7 @@
         "ServiceTypes": [
             "Plasma/Applet"
         ],
-        "Version": "2.7",
+        "Version": "1.0.0",
         "Website": "https://github.com/pdrso01/weatherline-plasmoid"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
